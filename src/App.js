@@ -1,11 +1,16 @@
 
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import Authentication from './components/Authentication';
+
 function App() {
   return (
-    <div className="">
-      <header className="">
-        Basic SignUp Page will be shown here
-      </header>
-    </div>
+    <Router>
+      <div>
+        <Routes>
+          <Route path='/' element={<Authentication />}/>
+        </Routes>
+      </div>
+    </Router>
   );
 }
 
