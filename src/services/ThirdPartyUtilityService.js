@@ -1,21 +1,20 @@
 import axios from 'axios';
 
-const post = async function(url, data, headers){
+const Post = async function(url, data, headers){
     try{
-        const postResponse = await axios.post(url, data, {headers});
-        const response = await postResponse.json();
+        const response = axios.post(url, data, {headers});
         return response
     }
     catch(err){
         return err;
     }
-
 }
 
-const get = async function(){
+const Get = async function(url, headers){
     try{
-        const getResponse = await axios.get(url, {headers});
-        const response = await getResponse.json();
+        console.log(url);
+        console.log(headers);
+        const response = axios.get(url, {headers});
         return response;
     }
     catch(err){
@@ -23,7 +22,4 @@ const get = async function(){
     }
 }
 
-module.exports = {
-    post,
-    get,
-}
+export {Get, Post};
