@@ -24,12 +24,12 @@ function Authentication() {
                 Accept: 'application/json'
             })
             .then((res) => {
-                console.log(res);
                 setEmail(res.data.username);
-                navigate('/dashboard');
+                navigate('/');
             })
             .catch((err) => {
-                alert("error");
+                setToken(null);
+                localStorage.clear();
             })
         }
         else if(user){
@@ -42,7 +42,7 @@ function Authentication() {
                 Post(constants.APIS.AUTHENTICATE, res.data).then((tokenResponse) => {
                     setToken(tokenResponse.data.token);
                     localStorage.setItem('login-token', tokenResponse.data.token);
-                    navigate('/dashboard');
+                    navigate('/');
                 })
                 .catch((err) => {
                     console.log(err);
