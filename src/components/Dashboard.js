@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Get } from "../services/ThirdPartyUtilityService";
 import constants from "../constants";
 import { useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 const Dashboard = function(){
     const navigate = useNavigate();
     const [email, setEmail ]= useState(null);
@@ -22,10 +23,9 @@ const Dashboard = function(){
             navigate("/login")
         })
     })
-    return <>
-        {email && <>{email}</>}
-        Dashboard route
-    </>
+    return <div>
+        < Navbar />
+            </div>
 }
 
 export default Dashboard;
