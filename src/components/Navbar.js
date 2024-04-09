@@ -40,7 +40,7 @@ const Navbar = function () {
   const logOut = function(){
       googleLogout();
       localStorage.clear();
-      navigate("/");
+      navigate("/login");
   }
 
   const intitalButtonStyle = { 'backgroundColor': '#F5efea', 'border': '0px' };
