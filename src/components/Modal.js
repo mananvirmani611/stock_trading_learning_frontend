@@ -49,6 +49,12 @@ const style = `.modal-overlay {
 const Modal = function ({ setModalOpen, stockData }) {
   const [password, setPassword] = useState('');
   const [isOpen, setIsOpen] = useState(true);
+  const [quantity, setQuantity] = useState(1);
+
+  const handleQuantityChange = function(value, type){
+    if(type === "de" && value === 0)return;
+    setQuantity(value);
+  }
 
   if (!isOpen) return null;
 
@@ -65,9 +71,9 @@ const Modal = function ({ setModalOpen, stockData }) {
         <div className="modal-content">
           <p>{stockData.price}</p>
           <div>
-          <button> <RemoveIcon /></button>
-              1
-            <button> <AddIcon /></button>
+          <button onClick={() => handleQuantityChange(quantity-1, "de")}> <RemoveIcon /></button>
+              {quantity}
+            <button onClick={() => handleQuantityChange(quantity+1, "in")}> <AddIcon /></button>
           </div>
           <input
             type="password"
