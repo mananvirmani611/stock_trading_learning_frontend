@@ -20,7 +20,7 @@ const style = `.modal-overlay {
     background-color: white;
     padding: 20px;
     width:400px;
-    height:300px;
+    height:260px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a box shadow for a raised effect */
   }
@@ -29,11 +29,11 @@ const style = `.modal-overlay {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 10px;
   }
   
   .modal-content {
     margin-bottom: 20px;
+    text-align:center;
   }
   
   .modal-footer {
@@ -45,7 +45,25 @@ const style = `.modal-overlay {
     background: none;
     border: none;
     cursor: pointer;
-  }`;
+  }
+  .stock-price{
+    font-size:26px;
+    margin:0;
+  }
+  .in-de-div{
+    font-size:30px;
+  }
+  .btn-change{
+    margin:3%;
+  }
+  .modal-overlay{
+    font-family:'Hind'
+  }
+  .submit-btn{
+    padding:1% 3%;
+    font-size:20px;
+  }
+  `;
 const Modal = function ({ setModalOpen, stockData }) {
   const [password, setPassword] = useState('');
   const [isOpen, setIsOpen] = useState(true);
@@ -62,28 +80,26 @@ const Modal = function ({ setModalOpen, stockData }) {
     {isOpen && <div className="modal-overlay">
       <div className="modal">
         <div className="modal-header">
-          <h2>{stockData.stock}</h2>
+          <h1>{stockData.stock}</h1>
           <button className="close-button" onClick={() => {
             setIsOpen(false)
             setModalOpen(false);
           }}><CloseIcon /></button>
         </div>
         <div className="modal-content">
-          <p>{stockData.price}</p>
           <div>
-          <button onClick={() => handleQuantityChange(quantity-1, "de")}> <RemoveIcon /></button>
-              {quantity}
-            <button onClick={() => handleQuantityChange(quantity+1, "in")}> <AddIcon /></button>
+          <p className='stock-price'>Current Price : {stockData.price} ₹</p>
           </div>
-          <input
-            type="password"
-            placeholder="Enter password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          <div className='in-de-div'>
+          <button onClick={() => handleQuantityChange(quantity-1, "de")} className='btn-change'> <RemoveIcon /></button>
+              {quantity}
+            <button onClick={() => handleQuantityChange(quantity+1, "in")} className='btn-change'> <AddIcon /></button>
+          </div>
+          <div>
+          </div>
         </div>
         <div className="modal-footer">
-          <button onClick={() => console.log('Submit clicked')}>Submit</button>
+          <button onClick={() => console.log('Submit clicked')} className='submit-btn'>Buy</button>
         </div>
       </div>
     </div>}
