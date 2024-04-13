@@ -7,7 +7,9 @@ import Table from '@mui/joy/Table';
 import Button from '@mui/joy/Button';
 import Pagination from '@mui/material/Pagination';
 import Modal from "./Modal";
-
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 const columns = [ 
     { field: 'stock', headerName: 'Stock', width: '500' },
@@ -21,6 +23,7 @@ const Dashboard = function(){
     const [pageNo, setPageNo] = useState(1);
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedStockData, setSelectedStockData] = useState({stock : "", price : ""});
+    const [balance, setBalance] = useState(null);
     useEffect(() => { 
         if(!localStorage.getItem('login-token')){
             navigate("/login");
@@ -33,6 +36,14 @@ const Dashboard = function(){
         .then((res) => {
             console.log(res);
             setEmail(res.data.username);
+            Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${res.data.username}`)
+            .then((res) => {
+                console.log("resdataaaaaaaaaaaa ", res.data.balance);
+                setBalance(res.data.balance);
+            }) 
+            .catch((err) => {
+                console.log(err);
+            })
         })
         .catch((err) => {
             navigate("/login")
@@ -47,7 +58,7 @@ const Dashboard = function(){
             setStockData(res.data.data);
         })
     }, [])
-    return <div>{email && <div style={{'padding' : '1% 2%'}}>
+    return <div>{email && balance && <div style={{'padding' : '1% 2%'}}>
         < Navbar email={email}/>
         {stockData &&
             <div style={{ 'padding': '2%', 'backgroundColor' : '#F5efea', 'margin' : '1% 0', 'borderRadius' : '10px'}}>
@@ -86,7 +97,7 @@ const Dashboard = function(){
             </div>
         }
 
-        {modalOpen && <Modal setModalOpen={setModalOpen} stockData={selectedStockData}/>}
+        {modalOpen && <Modal setModalOpen={setModalOpen} stockData={selectedStockData} balance={balance}/>}
     </div>}
     </div>
 }

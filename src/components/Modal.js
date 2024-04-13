@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+toast.configure();
 
 const style = `.modal-overlay {
     position: fixed;
@@ -64,13 +67,21 @@ const style = `.modal-overlay {
     font-size:20px;
   }
   `;
-const Modal = function ({ setModalOpen, stockData }) {
+const Modal = function ({ setModalOpen, stockData, balance }) {
   const [password, setPassword] = useState('');
   const [isOpen, setIsOpen] = useState(true);
   const [quantity, setQuantity] = useState(1);
+  const [totalQuantity, setTotalQuantity] = useState(stockData.price);
 
   const handleQuantityChange = function(value, type){
     if(type === "de" && value === 0)return;
+    if(type === "in"){
+      if(value * stockData.price > balance){
+        toast.error("Insufficient Balance", { autoClose: 1000 });
+        return;
+      }
+    }
+    setTotalQuantity(value * stockData.price);
     setQuantity(value);
   }
 
@@ -88,7 +99,7 @@ const Modal = function ({ setModalOpen, stockData }) {
         </div>
         <div className="modal-content">
           <div>
-          <p className='stock-price'>Current Price : {stockData.price * quantity} ₹</p>
+          <p className='stock-price'>Current Price : {totalQuantity} ₹</p>
           </div>
           <div className='in-de-div'>
           <button onClick={() => handleQuantityChange(quantity-1, "de")} className='btn-change'> <RemoveIcon /></button>

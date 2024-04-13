@@ -74,7 +74,7 @@ const Navbar = function ({email}) {
         <div className='left-div'>Dashboard</div>
       </Grid>
       <Grid item xs={2} >
-        <div className='right-div'>Credits Left: {balance}</div>
+        <div className='right-div'>Credits Left: {balance}₹</div>
       </Grid>
       <Grid item xs={1}>
         <button onClick={() => navigate('/profile')} style={styleButton} onMouseOver={() => setStyleButton({ ...styleButton, 'cursor': 'pointer' })}>
