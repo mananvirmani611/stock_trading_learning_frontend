@@ -26,7 +26,7 @@ const Dashboard = function(){
             navigate("/login");
         }
         console.log(`Bearer ${localStorage.getItem('login-token')}`);
-        Get(constants.APIS.VERIFY_TOKEN, {
+        Get(constants.BASE_API_URL + constants.APIS.VERIFY_TOKEN, {
             Authorization: `Bearer ${localStorage.getItem('login-token')}`,
             Accept: 'application/json'
         })
@@ -38,8 +38,7 @@ const Dashboard = function(){
             navigate("/login")
         })
 
-        console.log(constants.APIS.ALL_STOCKS_DATA + `?page_no=${pageNo}`);
-        Get(constants.APIS.ALL_STOCKS_DATA + `?page_no=${pageNo}`, {
+        Get(constants.BASE_API_URL + constants.APIS.ALL_STOCKS_DATA + `?page_no=${pageNo}`, {
             Authorization: `Bearer ${localStorage.getItem('login-token')}`,
             Accept: 'application/json'
         })
@@ -48,8 +47,8 @@ const Dashboard = function(){
             setStockData(res.data.data);
         })
     }, [])
-    return <div style={{'padding' : '1% 2%'}}>
-        < Navbar />
+    return <div>{email && <div style={{'padding' : '1% 2%'}}>
+        < Navbar email={email}/>
         {stockData &&
             <div style={{ 'padding': '2%', 'backgroundColor' : '#F5efea', 'margin' : '1% 0', 'borderRadius' : '10px'}}>
                 <Table sx={{
@@ -88,6 +87,7 @@ const Dashboard = function(){
         }
 
         {modalOpen && <Modal setModalOpen={setModalOpen} stockData={selectedStockData}/>}
+    </div>}
     </div>
 }
 

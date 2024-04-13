@@ -39,7 +39,7 @@ function Authentication() {
             })
             .then((res) => {
                 setEmail(res.data.email);
-                Post(constants.APIS.AUTHENTICATE, res.data).then((tokenResponse) => {
+                Post(constants.BASE_API_URL + constants.APIS.AUTHENTICATE, res.data).then((tokenResponse) => {
                     setToken(tokenResponse.data.token);
                     localStorage.setItem('login-token', tokenResponse.data.token);
                     navigate('/');

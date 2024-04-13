@@ -88,7 +88,7 @@ const Modal = function ({ setModalOpen, stockData }) {
         </div>
         <div className="modal-content">
           <div>
-          <p className='stock-price'>Current Price : {stockData.price} ₹</p>
+          <p className='stock-price'>Current Price : {stockData.price * quantity} ₹</p>
           </div>
           <div className='in-de-div'>
           <button onClick={() => handleQuantityChange(quantity-1, "de")} className='btn-change'> <RemoveIcon /></button>
