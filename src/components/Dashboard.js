@@ -24,6 +24,15 @@ const Dashboard = function(){
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedStockData, setSelectedStockData] = useState({stock : "", price : ""});
     const [balance, setBalance] = useState(null);
+    
+    function openModal(stockName, stockPrice){
+        if(stockPrice > balance){
+            toast.error("Insufficient Balance");
+            return;
+        }
+        setModalOpen(true);
+        setSelectedStockData({stock : stockName, price: stockPrice})
+    }
     useEffect(() => { 
         if(!localStorage.getItem('login-token')){
             navigate("/login");
@@ -88,7 +97,7 @@ const Dashboard = function(){
                             <tr key={row.stock}>
                                 <td>{row.stock}</td>
                                 <td>{row.price}</td>
-                                <td><Button variant="outlined" onClick={() => {setModalOpen(true); setSelectedStockData({stock : row.stock, price: row.price})}}>Buy </Button></td>
+                                <td><Button variant="outlined" onClick={() => openModal(row.stock, row.price)}>Buy </Button></td>
                             </tr>
                         ))}
                     </tbody>

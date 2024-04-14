@@ -5,7 +5,8 @@ const Constants = {
         AUTHENTICATE : '/api/authenticate',
         VERIFY_TOKEN : '/api/verifyToken',
         ALL_STOCKS_DATA : '/api/stocks/data',
-        CURRENT_BALANCE : '/api/users/current-balance'
+        CURRENT_BALANCE : '/api/users/current-balance',
+        BUY_STOCK : '/api/users/stock-record',
     }
 
 };

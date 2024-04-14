@@ -9,6 +9,15 @@ const Post = async function(url, data, headers){
         return err;
     }
 }
+const Patch = async function(url, data, headers){
+    try{
+        const response = axios.patch(url, data, {headers});
+        return response
+    }
+    catch(err){
+        return err;
+    }
+}
 
 const Get = async function(url, headers){
     try{
@@ -22,4 +31,4 @@ const Get = async function(url, headers){
     }
 }
 
-export {Get, Post};
+export {Get, Post, Patch};

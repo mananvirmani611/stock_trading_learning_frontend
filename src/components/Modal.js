@@ -2,8 +2,11 @@ import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
+import { Patch } from "../services/ThirdPartyUtilityService";
+import Constants from '../constants';
+
 toast.configure();
 
 const style = `.modal-overlay {
@@ -66,13 +69,34 @@ const style = `.modal-overlay {
     padding:1% 3%;
     font-size:20px;
   }
-  `;
+`;
 const Modal = function ({ setModalOpen, stockData, balance }) {
-  const [password, setPassword] = useState('');
   const [isOpen, setIsOpen] = useState(true);
   const [quantity, setQuantity] = useState(1);
-  const [totalQuantity, setTotalQuantity] = useState(stockData.price);
+  const [totalPrice, setTotalPrice] = useState(stockData.price);
 
+  const buyStock = async function(){
+    const reqBody = {
+      stockName : stockData.stock,
+      quantity : quantity,
+      stockPrice : stockData.price,
+      totalValue : totalPrice,
+    }
+    const headers = {
+        Authorization: `Bearer ${localStorage.getItem('login-token')}`,
+        Accept: 'application/json'
+    }
+    Patch(Constants.BASE_API_URL + Constants.APIS.BUY_STOCK, reqBody, headers)
+    .then((res) => {
+      console.log(res);
+      toast.success("Purchase Successful", {autoClose : 500});
+      setIsOpen(false);
+      setModalOpen(false);
+    })
+    .catch((err) => {
+      console.log(err);
+    })
+}
   const handleQuantityChange = function(value, type){
     if(type === "de" && value === 0)return;
     if(type === "in"){
@@ -81,7 +105,7 @@ const Modal = function ({ setModalOpen, stockData, balance }) {
         return;
       }
     }
-    setTotalQuantity(value * stockData.price);
+    setTotalPrice(value * stockData.price);
     setQuantity(value);
   }
 
@@ -99,7 +123,7 @@ const Modal = function ({ setModalOpen, stockData, balance }) {
         </div>
         <div className="modal-content">
           <div>
-          <p className='stock-price'>Current Price : {totalQuantity} ₹</p>
+          <p className='stock-price'>Current Price : {totalPrice} ₹</p>
           </div>
           <div className='in-de-div'>
           <button onClick={() => handleQuantityChange(quantity-1, "de")} className='btn-change'> <RemoveIcon /></button>
@@ -110,7 +134,7 @@ const Modal = function ({ setModalOpen, stockData, balance }) {
           </div>
         </div>
         <div className="modal-footer">
-          <button onClick={() => console.log('Submit clicked')} className='submit-btn'>Buy</button>
+          <button onClick={buyStock} className='submit-btn'>Buy</button>
         </div>
       </div>
     </div>}
