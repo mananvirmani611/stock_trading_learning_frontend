@@ -70,7 +70,7 @@ const style = `.modal-overlay {
     font-size:20px;
   }
 `;
-const Modal = function ({ setModalOpen, stockData, balance }) {
+const Modal = function ({ setModalOpen, stockData, balance, email }) {
   const [isOpen, setIsOpen] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(stockData.price);
@@ -81,6 +81,7 @@ const Modal = function ({ setModalOpen, stockData, balance }) {
       quantity : quantity,
       stockPrice : stockData.price,
       totalValue : totalPrice,
+      email : email,
     }
     const headers = {
         Authorization: `Bearer ${localStorage.getItem('login-token')}`,

@@ -25,13 +25,20 @@ const Dashboard = function(){
     const [selectedStockData, setSelectedStockData] = useState({stock : "", price : ""});
     const [balance, setBalance] = useState(null);
     
-    function openModal(stockName, stockPrice){
-        if(stockPrice > balance){
-            toast.error("Insufficient Balance");
-            return;
-        }
-        setModalOpen(true);
-        setSelectedStockData({stock : stockName, price: stockPrice})
+    async function openModal(stockName, stockPrice){
+        await Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${email}`)
+        .then((res) => {
+            if(stockPrice > res.data.balance){
+                toast.error("Insufficient Balance", {autoClose : 500});
+                return;
+            }
+            setBalance(res.data.balance);
+            setModalOpen(true);
+            setSelectedStockData({stock : stockName, price: stockPrice})
+        }) 
+        .catch((err) => {
+            console.log(err);
+        })
     }
     useEffect(() => { 
         if(!localStorage.getItem('login-token')){
@@ -106,7 +113,7 @@ const Dashboard = function(){
             </div>
         }
 
-        {modalOpen && <Modal setModalOpen={setModalOpen} stockData={selectedStockData} balance={balance}/>}
+        {modalOpen && <Modal setModalOpen={setModalOpen} stockData={selectedStockData} balance={balance} email={email}/>}
     </div>}
     </div>
 }
