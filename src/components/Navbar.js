@@ -69,7 +69,7 @@ const Navbar = function ({email}) {
   const [styleButton, setStyleButton] = useState(intitalButtonStyle);
 
   return <>
-    <Grid container className='main-grid' variant='circular'>
+    <Grid container className='main-grid' variant='circular' style={{'boxShadow' : '3px 3px lightgray'}}>
       <Grid item xs={9}>
         <div className='left-div'>Dashboard</div>
       </Grid>

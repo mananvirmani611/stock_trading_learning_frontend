@@ -16,6 +16,7 @@ const columns = [
     { field: 'price', headerName: 'Price', width: '400' },
     { field: '', headerName: 'Buy', width: '400' },
 ];
+
 const Dashboard = function(){
     const navigate = useNavigate();
     const [email, setEmail ] = useState(null);
@@ -25,6 +26,9 @@ const Dashboard = function(){
     const [selectedStockData, setSelectedStockData] = useState({stock : "", price : ""});
     const [balance, setBalance] = useState(null);
     
+    const handlePageChange = function(event, value){
+        setPageNo(value);
+    }
     async function openModal(stockName, stockPrice){
         await Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${email}`)
         .then((res) => {
@@ -73,11 +77,11 @@ const Dashboard = function(){
             console.log(res.data.data);
             setStockData(res.data.data);
         })
-    }, [])
+    }, [pageNo])
     return <div>{email && balance && <div style={{'padding' : '1% 2%'}}>
         < Navbar email={email}/>
         {stockData &&
-            <div style={{ 'padding': '2%', 'backgroundColor' : '#F5efea', 'margin' : '1% 0', 'borderRadius' : '10px'}}>
+            <div style={{ 'padding': '2%', 'backgroundColor' : '#F5efea', 'margin' : '1% 0', 'borderRadius' : '10px', 'boxShadow' : '3px 3px lightgray'}}>
                 <Table sx={{
                     '& tr td:last-child': {
                         textAlign: 'center',
@@ -91,7 +95,7 @@ const Dashboard = function(){
                     '& tr:nth-of-type(even)': {
                         backgroundColor: 'white', // Change the background color for odd rows (stripes)
                     },
-                }} stripe='odd' borderAxis="both" style={{ 'borderRadius': '20px' }}>
+                }} stripe='odd' borderAxis="both" borderRadius='1' style={{'boxShadow' : '2px 2px lightgray'}} >
                     <thead>
                         <tr style={{'backgroundColor' : 'lightgray!important'}}>
                             <th style={{ width: '40%' }}>Stock Name</th>
@@ -109,7 +113,7 @@ const Dashboard = function(){
                         ))}
                     </tbody>
                 </Table>
-                <Pagination count={5} />
+                <Pagination count={5} onChange={handlePageChange} style={{'margin' : '1% 0'}} variant="outlined"/>
             </div>
         }
 

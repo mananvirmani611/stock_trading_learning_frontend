@@ -10,6 +10,7 @@ import Constants from '../constants';
 toast.configure();
 
 const style = `.modal-overlay {
+    box-shadow : 30px 30px lightgray;
     position: fixed;
     top: 0;
     left: 0;
