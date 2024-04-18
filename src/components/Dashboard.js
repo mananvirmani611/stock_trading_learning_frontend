@@ -79,7 +79,7 @@ const Dashboard = function(){
         })
     }, [pageNo])
     return <div>{email && balance && <div style={{'padding' : '1% 2%'}}>
-        < Navbar email={email}/>
+        < Navbar email={email} leftText="Dashboard" rightText={`Credits Left: `} showBalance={true}/>
         {stockData &&
             <div style={{ 'padding': '2%', 'backgroundColor' : '#F5efea', 'margin' : '1% 0', 'borderRadius' : '10px', 'boxShadow' : '3px 3px lightgray'}}>
                 <Table sx={{

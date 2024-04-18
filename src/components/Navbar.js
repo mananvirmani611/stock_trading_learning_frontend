@@ -12,7 +12,7 @@ import constants from '../constants';
 
 
 
-const Navbar = function ({email}) {
+const Navbar = function ({email, leftText, rightText, showBalance}) {
   const navigate = useNavigate();
   const [balance, setBalance] = useState("");
   const style = `
@@ -49,13 +49,15 @@ const Navbar = function ({email}) {
     `
   useEffect(() => {
       console.log(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${email}`);
-      Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${email}`)
-      .then((res) => {
-        setBalance(res.data.balance);
-      }) 
-      .catch((err) => {
-        console.log(err);
-      })
+      if(showBalance){
+        Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${email}`)
+        .then((res) => {
+          setBalance(res.data.balance);
+        }) 
+        .catch((err) => {
+          console.log(err);
+        })
+      }
   })
 
   const logOut = function(){
@@ -71,10 +73,10 @@ const Navbar = function ({email}) {
   return <>
     <Grid container className='main-grid' variant='circular' style={{'boxShadow' : '3px 3px lightgray'}}>
       <Grid item xs={9}>
-        <div className='left-div'>Dashboard</div>
+        <div className='left-div'>{leftText}</div>
       </Grid>
       <Grid item xs={2} >
-        <div className='right-div'>Credits Left: {balance}₹</div>
+        <div className='right-div'>{rightText && rightText + balance + '₹'}</div>
       </Grid>
       <Grid item xs={1}>
         <button onClick={() => navigate('/profile')} style={styleButton} onMouseOver={() => setStyleButton({ ...styleButton, 'cursor': 'pointer' })}>
