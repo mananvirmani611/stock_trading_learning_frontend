@@ -8,6 +8,7 @@ import Pagination from '@mui/material/Pagination'
 import { json, useNavigate } from "react-router-dom";
 import { Get } from "../services/ThirdPartyUtilityService";
 import constants from "../constants";
+import HomeIcon from '@mui/icons-material/Home';
 
 const style = `
     .display-card{
@@ -20,11 +21,6 @@ const headingsForCard = [
     'Total Invested Amt:',
     'Current Value:' 
 ]
-const values = [
-    '2323₹',
-    '2677₹',
-    '4563₹'
-]
 const colors = [
     '#e5d9cf',
     '#e5d9cf',
@@ -34,6 +30,7 @@ const Profile = function () {
     const navigate = useNavigate();
     const [tabledata, setTableData] = useState(null);
     const [email, setEmail] = useState(null);
+    const [values, setValues] = useState([0, 0, 0]);
     // let stockPricesMap = new Map([]);
     const [stockPricesMap, setStockPricesMap] = useState(new Map([]));
     useEffect(() => {
@@ -64,13 +61,24 @@ const Profile = function () {
                 stockPricesMaptemp.set(stockName, stockPriceData.data.data.price);
             }
             setStockPricesMap(stockPricesMaptemp);
+
+            const userStockData = response2.data;
+            const balanceResponse = await Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${response1.data.username}`)
+            values[0] = balanceResponse.data.balance + '₹';
+            userStockData.forEach((item) => {
+                values[1] += (item.quantity * item.stockPrice);
+                values[2] += (item.quantity * stockPricesMaptemp.get(item.stockName));
+            })
+            values[1] += '₹'
+            values[2] += '₹'
+            setValues(values);
         }
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffectF();
     }, [] )
   return (
     <div style={{ padding: "1% 2%" }}>
-      <Navbar leftText={"Personal Dashboard"} showBalance={false}/>
+      <Navbar leftText={"Personal Dashboard"} showBalance={false} iconType='Home'/>
       <div
         style={{
           padding: "2%",
@@ -111,11 +119,13 @@ const Profile = function () {
                 }} stripe='odd' borderAxis="both" borderRadius='1' style={{'boxShadow' : '2px 2px lightgray'}} >
                     <thead>
                         <tr style={{'backgroundColor' : 'lightgray!important'}}>
-                            <th style={{ width: '30%' }}>Stock Name</th>
-                            <th>Invested Value</th>
-                            <th>Current Value</th>
+                            <th style={{ width: '20%' }}>Stock Name</th>
+                            <th>Purchase Price</th>
+                            <th>Current Price</th>
                             <th>Stocks Available</th>
-                            <th>Sell Stock</th>
+                            <th>Total Invested Value</th>
+                            <th>Total Current Value</th>    
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -126,6 +136,8 @@ const Profile = function () {
                                 <td>{item.stockPrice}</td>
                                 <td>{stockPricesMap.get(item.stockName)}</td>
                                 <td>{item.quantity}</td>
+                                <td>{item.totalValue}</td>
+                                <td>{stockPricesMap.get(item.stockName) * item.quantity}</td>
                                 <td><Button variant="outlined">Sell</Button></td>
                             </tr>
                         })

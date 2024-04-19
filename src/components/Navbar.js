@@ -9,10 +9,11 @@ import Tooltip from '@mui/material/Tooltip';
 import { useNavigate } from 'react-router-dom';
 import { Get } from '../services/ThirdPartyUtilityService';
 import constants from '../constants';
+import Home from '@mui/icons-material/Home';
 
 
 
-const Navbar = function ({email, leftText, rightText, showBalance}) {
+const Navbar = function ({email, leftText, rightText, showBalance, iconType}) {
   const navigate = useNavigate();
   const [balance, setBalance] = useState("");
   const style = `
@@ -47,6 +48,13 @@ const Navbar = function ({email, leftText, rightText, showBalance}) {
         }
         
     `
+  const handleNavigation = function(icon){
+    // console.log("eeeeeeeee ", iconType);
+    if(icon === 'Profile'){
+      navigate("/profile");
+    }
+    else navigate('/')
+  }
   useEffect(() => {
       console.log(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${email}`);
       if(showBalance){
@@ -79,9 +87,13 @@ const Navbar = function ({email, leftText, rightText, showBalance}) {
         <div className='right-div'>{rightText && rightText + balance + '₹'}</div>
       </Grid>
       <Grid item xs={1}>
-        <button onClick={() => navigate('/profile')} style={styleButton} onMouseOver={() => setStyleButton({ ...styleButton, 'cursor': 'pointer' })}>
+        <button onClick={() => handleNavigation(iconType)} style={styleButton} onMouseOver={() => setStyleButton({ ...styleButton, 'cursor': 'pointer' })}>
           <Tooltip title="Profile" placement="top-end">
-            <AccountCircleIcon fontSize='large' className='top-buttons' />
+            {
+              iconType === 'Profile' ?
+                  <AccountCircleIcon fontSize='large' className='top-buttons' /> :
+                  <Home fontSize='large'/>
+            }
           </Tooltip>
         </button>
 
