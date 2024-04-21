@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Get } from "../services/ThirdPartyUtilityService";
+import { Get, Patch } from "../services/ThirdPartyUtilityService";
 import constants from "../constants";
 import { useNavigate } from "react-router-dom";
 import Navbar from "./Navbar";
@@ -44,6 +44,29 @@ const Dashboard = function(){
             console.log(err);
         })
     }
+    const buyStock = async function(stockData, quantity, totalPrice){
+        const reqBody = {
+          stockName : stockData.stock,
+          quantity : quantity,
+          stockPrice : stockData.price,
+          totalValue : totalPrice,
+          email : email,
+        }
+        const headers = {
+            Authorization: `Bearer ${localStorage.getItem('login-token')}`,
+            Accept: 'application/json'
+        }
+        Patch(constants.BASE_API_URL + constants.APIS.BUY_STOCK, reqBody, headers)
+        .then((res) => {
+          console.log(res);
+          toast.success("Purchase Successful", {autoClose : 500});
+          setModalOpen(false);
+        })
+        .catch((err) => {
+          console.log(err);
+        })
+    }
+
     useEffect(() => { 
         if(!localStorage.getItem('login-token')){
             navigate("/login");
@@ -79,7 +102,7 @@ const Dashboard = function(){
         })
     }, [pageNo])
     return <div>{email && balance && <div style={{'padding' : '1% 2%'}}>
-        < Navbar email={email} leftText="Dashboard" rightText={`Credits Left: `} showBalance={true} iconType='Profile'/>
+        {email && <Navbar email={email} leftText="Dashboard" rightText={`Credits Left: `} showBalance={true} iconType='Profile'/>}
         {stockData &&
             <div style={{ 'padding': '2%', 'backgroundColor' : '#F5efea', 'margin' : '1% 0', 'borderRadius' : '10px', 'boxShadow' : '3px 3px lightgray'}}>
                 <Table sx={{
@@ -117,7 +140,7 @@ const Dashboard = function(){
             </div>
         }
 
-        {modalOpen && <Modal setModalOpen={setModalOpen} stockData={selectedStockData} balance={balance} email={email}/>}
+        {modalOpen && <Modal setModalOpen={setModalOpen} stockData={selectedStockData} balance={balance} email={email} buyStockFunction={buyStock}/>}
     </div>}
     </div>
 }

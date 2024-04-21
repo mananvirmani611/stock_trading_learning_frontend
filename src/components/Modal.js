@@ -4,8 +4,6 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 import { toast } from 'react-toastify';
 import "react-toastify/dist/ReactToastify.css";
-import { Patch } from "../services/ThirdPartyUtilityService";
-import Constants from '../constants';
 
 toast.configure();
 
@@ -71,43 +69,23 @@ const style = `.modal-overlay {
     font-size:20px;
   }
 `;
-const Modal = function ({ setModalOpen, stockData, balance, email }) {
+const Modal = function ({ setModalOpen, stockData, balance, email, buyStockFunction, maxAllowedQuantity }) {
   const [isOpen, setIsOpen] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(stockData.price);
-
-  const buyStock = async function(){
-    const reqBody = {
-      stockName : stockData.stock,
-      quantity : quantity,
-      stockPrice : stockData.price,
-      totalValue : totalPrice,
-      email : email,
-    }
-    const headers = {
-        Authorization: `Bearer ${localStorage.getItem('login-token')}`,
-        Accept: 'application/json'
-    }
-    Patch(Constants.BASE_API_URL + Constants.APIS.BUY_STOCK, reqBody, headers)
-    .then((res) => {
-      console.log(res);
-      toast.success("Purchase Successful", {autoClose : 500});
-      setIsOpen(false);
-      setModalOpen(false);
-    })
-    .catch((err) => {
-      console.log(err);
-    })
-}
   const handleQuantityChange = function(value, type){
     if(type === "de" && value === 0)return;
     if(type === "in"){
+      if(value > maxAllowedQuantity){
+        toast.error(`Only ${maxAllowedQuantity} stocks were purchased at this price`, { autoClose: 1000 });
+        return;
+      }
       if(value * stockData.price > balance){
         toast.error("Insufficient Balance", { autoClose: 1000 });
         return;
       }
     }
-    setTotalPrice(value * stockData.price);
+    setTotalPrice((value * stockData.price).toFixed(2));
     setQuantity(value);
   }
 
@@ -136,7 +114,7 @@ const Modal = function ({ setModalOpen, stockData, balance, email }) {
           </div>
         </div>
         <div className="modal-footer">
-          <button onClick={buyStock} className='submit-btn'>Buy</button>
+          <button onClick={()=> buyStockFunction(stockData, quantity, totalPrice)} className='submit-btn'>Buy</button>
         </div>
       </div>
     </div>}

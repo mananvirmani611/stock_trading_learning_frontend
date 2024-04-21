@@ -21,8 +21,6 @@ const Patch = async function(url, data, headers){
 
 const Get = async function(url, headers){
     try{
-        console.log(url);
-        console.log(headers);
         const response = axios.get(url, {headers});
         return response;
     }

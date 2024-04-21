@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Grid from '@mui/material/Grid';
 import { googleLogout } from '@react-oauth/google';
-import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Tooltip from '@mui/material/Tooltip';
@@ -49,18 +47,16 @@ const Navbar = function ({email, leftText, rightText, showBalance, iconType}) {
         
     `
   const handleNavigation = function(icon){
-    // console.log("eeeeeeeee ", iconType);
     if(icon === 'Profile'){
       navigate("/profile");
     }
     else navigate('/')
   }
   useEffect(() => {
-      console.log(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${email}`);
       if(showBalance){
         Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${email}`)
         .then((res) => {
-          setBalance(res.data.balance);
+          setBalance((res.data.balance).toFixed(2));
         }) 
         .catch((err) => {
           console.log(err);
