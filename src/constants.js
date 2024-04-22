@@ -8,6 +8,7 @@ const Constants = {
         CURRENT_BALANCE : '/api/users/current-balance',
         BUY_STOCK : '/api/users/stock-record',
         USER_DATA : '/api/users/data',
+        SELL_STOCK : '/api/users/sell',
     }
 
 };

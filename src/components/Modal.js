@@ -69,10 +69,11 @@ const style = `.modal-overlay {
     font-size:20px;
   }
 `;
-const Modal = function ({ setModalOpen, stockData, balance, email, buyStockFunction, maxAllowedQuantity }) {
+const Modal = function ({ type, setModalOpen, stockData, balance, email, buyStockFunction, maxAllowedQuantity }) {
   const [isOpen, setIsOpen] = useState(true);
   const [quantity, setQuantity] = useState(1);
   const [totalPrice, setTotalPrice] = useState(stockData.price);
+  console.log("modalllllllllllllllllllllllllllll ", stockData.recordId);
   const handleQuantityChange = function(value, type){
     if(type === "de" && value === 0)return;
     if(type === "in"){
@@ -80,13 +81,25 @@ const Modal = function ({ setModalOpen, stockData, balance, email, buyStockFunct
         toast.error(`Only ${maxAllowedQuantity} stocks were purchased at this price`, { autoClose: 1000 });
         return;
       }
+      else if(value <= maxAllowedQuantity){
+        setTotalPrice((value * stockData.price).toFixed(2));
+        setQuantity(value);
+        return;
+      }
+
       if(value * stockData.price > balance){
         toast.error("Insufficient Balance", { autoClose: 1000 });
         return;
       }
+      else{
+        setTotalPrice((value * stockData.price).toFixed(2));
+        setQuantity(value);
+      }
     }
-    setTotalPrice((value * stockData.price).toFixed(2));
-    setQuantity(value);
+    else{
+      setTotalPrice((value * stockData.price).toFixed(2))
+      setQuantity(value);
+    }
   }
 
   if (!isOpen) return null;
@@ -114,7 +127,13 @@ const Modal = function ({ setModalOpen, stockData, balance, email, buyStockFunct
           </div>
         </div>
         <div className="modal-footer">
-          <button onClick={()=> buyStockFunction(stockData, quantity, totalPrice)} className='submit-btn'>Buy</button>
+          <button onClick={() => {
+            type === "buy" ?
+            buyStockFunction(stockData, quantity, totalPrice) : 
+            buyStockFunction(email, stockData.recordId, quantity)}} 
+            className='submit-btn'>
+              Buy
+          </button>
         </div>
       </div>
     </div>}

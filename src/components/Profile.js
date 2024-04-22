@@ -5,7 +5,7 @@ import { Grid } from "@mui/material";
 import Table from '@mui/joy/Table';
 import Button from '@mui/joy/Button';
 import { useNavigate } from "react-router-dom";
-import { Get } from "../services/ThirdPartyUtilityService";
+import { Get, Patch } from "../services/ThirdPartyUtilityService";
 import constants from "../constants";
 import Modal from "./Modal";
 
@@ -35,12 +35,31 @@ const Profile = function () {
     const [selectedStockData, setSelectedStockData] = useState(null);
     const [maxAllowedQuantity, setMaximumAllowedQuantity] = useState(null);
 
-    const sellStock = async function(){
+    const sellStock = async function(email, recordId, howManyToSell){
+        const reqHeaders = {
+            Authorization: `Bearer ${localStorage.getItem('login-token')}`,
+            Accept: 'application/json'
+        }
+        const reqBody = {
+            recordId : recordId,
+            username : email,
+            quantityToSell : howManyToSell
+        }
+
+        Patch(constants.BASE_API_URL + constants.APIS.SELL_STOCK, reqBody, reqHeaders)
+        .then((res) => {
+            console.log(res);
+            setModalOpen(false);
+            
+        })
+        .catch((err) => {
+            ///send error toast
+        })
 
     }
 
-    const openModal = function(stockName, stockPrice, qty){
-        setSelectedStockData({stock : stockName, price : stockPrice})
+    const openModal = function(stockName, stockPrice, qty, recordID){
+        setSelectedStockData({stock : stockName, price : stockPrice, recordId: recordID})
         setMaximumAllowedQuantity(qty)
         setModalOpen(true);
     }
@@ -64,6 +83,7 @@ const Profile = function () {
         let stockPricesMaptemp = new Map([]);
         for(let i = 0; i<response2.data.length; i++){
             const stockName = response2.data[i].stockName;
+            console.log("stockdataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ", JSON.stringify(response2.data[i]));
             if(stockPricesMaptemp.has(stockName))continue;
             const stockPriceData = await Get(constants.BASE_API_URL + constants.APIS.ALL_STOCKS_DATA + `?stock_name=${stockName}`)
             stockPricesMaptemp.set(stockName, stockPriceData.data.data.price);
@@ -129,21 +149,21 @@ const Profile = function () {
                     <tbody>
                     {tabledata &&
                         tabledata.map((item) => {
-                            return <tr>
+                            return <tr key={item.recordId}>
                                 <td>{item.stockName}</td>
                                 <td>{item.stockPrice}</td>
                                 <td>{stockPricesMap.get(item.stockName)}</td>
                                 <td>{item.quantity}</td>
                                 <td>{item.totalValue}</td>
                                 <td>{stockPricesMap.get(item.stockName) * item.quantity}</td>
-                                <td><Button onClick={() => openModal(item.stockName, item.stockPrice, item.quantity)} variant="outlined">Sell</Button></td>
+                                <td><Button onClick={() => openModal(item.stockName, item.stockPrice, item.quantity, item.recordId)} variant="outlined">Sell</Button></td>
                             </tr>
                         })
                     }  
                     </tbody>
                 </Table>
       </div>
-      {modalOpen && <Modal setModalOpen={setModalOpen} stockData={selectedStockData} balance={values[0]} email={email} buyStockFunction={sellStock} maxAllowedQuantity={maxAllowedQuantity}/>}
+      {modalOpen && <Modal type={"sell"} setModalOpen={setModalOpen} stockData={selectedStockData} balance={values[0]} email={email} buyStockFunction={sellStock} maxAllowedQuantity={maxAllowedQuantity}/>}
       <style>{style}</style>
     </div>
   );
