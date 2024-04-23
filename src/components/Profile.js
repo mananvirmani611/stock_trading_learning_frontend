@@ -43,7 +43,8 @@ const Profile = function () {
         const reqBody = {
             recordId : recordId,
             username : email,
-            quantityToSell : howManyToSell
+            quantityToSell : howManyToSell,
+            addBalance : howManyToSell * stockPricesMap.get(selectedStockData.stock)
         }
 
         Patch(constants.BASE_API_URL + constants.APIS.SELL_STOCK, reqBody, reqHeaders)
@@ -93,9 +94,10 @@ const Profile = function () {
         const userStockData = response2.data;
         const balanceResponse = await Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${response1.data.username}`)
         values[0] = balanceResponse.data.balance;
+        console.log("userrrrrrr stockkkkkkkkkkkkkkkkkkkkkkkkk ", userStockData)
         userStockData.forEach((item) => {
-            values[1] += Number(item.quantity * item.stockPrice);
-            values[2] += Number(item.quantity * stockPricesMaptemp.get(item.stockName));
+            values[1] += Number(item.purchaseQuantity * item.stockPurchasePrice);
+            values[2] += Number(item.purchaseQuantity * stockPricesMaptemp.get(item.stockName));
         })
         setValues(values);
     }
@@ -105,7 +107,7 @@ const Profile = function () {
         //if(email is already coming)
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffectF();
-    }, [] )
+    }, [modalOpen] )
   return (
     <div style={{ padding: "1% 2%" }}>
       <Navbar leftText={"Personal Dashboard"} showBalance={false} iconType='Home'/>
@@ -139,6 +141,7 @@ const Profile = function () {
                         <tr style={{'backgroundColor' : 'lightgray!important'}}>
                             <th style={{ width: '20%' }}>Stock Name</th>
                             <th>Purchase Price</th>
+                            <th>Stocks Purchased</th>
                             <th>Current Price</th>
                             <th>Stocks Available</th>
                             <th>Total Invested Value</th>
@@ -151,12 +154,13 @@ const Profile = function () {
                         tabledata.map((item) => {
                             return <tr key={item.recordId}>
                                 <td>{item.stockName}</td>
-                                <td>{item.stockPrice}</td>
+                                <td>{item.stockPurchasePrice}</td>
+                                <td>{item.purchaseQuantity}</td>
                                 <td>{stockPricesMap.get(item.stockName)}</td>
                                 <td>{item.quantity}</td>
-                                <td>{item.totalValue}</td>
+                                <td>{item.totalPurchaseValue}</td>
                                 <td>{stockPricesMap.get(item.stockName) * item.quantity}</td>
-                                <td><Button onClick={() => openModal(item.stockName, item.stockPrice, item.quantity, item.recordId)} variant="outlined">Sell</Button></td>
+                                <td><Button onClick={() => openModal(item.stockName, stockPricesMap.get(item.stockName), item.quantity, item.recordId)} variant="outlined">Sell</Button></td>
                             </tr>
                         })
                     }  

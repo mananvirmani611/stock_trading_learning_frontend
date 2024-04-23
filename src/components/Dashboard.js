@@ -48,8 +48,9 @@ const Dashboard = function(){
         const reqBody = {
           stockName : stockData.stock,
           quantity : quantity,
-          stockPrice : stockData.price,
-          totalValue : totalPrice,
+          purchaseQuantity : quantity,
+          stockPurchasePrice : stockData.price,
+          totalPurchaseValue : totalPrice,
           email : email,
         }
         const headers = {
