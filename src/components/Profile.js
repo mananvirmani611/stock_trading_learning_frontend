@@ -29,7 +29,7 @@ const Profile = function () {
     const navigate = useNavigate();
     const [tabledata, setTableData] = useState(null);
     const [email, setEmail] = useState(null);
-    const [values, setValues] = useState([Number(0), Number(0), Number(0)]);
+    const [values, setValues] = useState([Number(null), Number(null), Number(null)]);
     const [stockPricesMap, setStockPricesMap] = useState(new Map([]));
     const [modalOpen, setModalOpen] = useState(false);
     const [selectedStockData, setSelectedStockData] = useState(null);
@@ -51,7 +51,7 @@ const Profile = function () {
         .then((res) => {
             console.log(res);
             setModalOpen(false);
-            
+
         })
         .catch((err) => {
             ///send error toast
@@ -84,7 +84,6 @@ const Profile = function () {
         let stockPricesMaptemp = new Map([]);
         for(let i = 0; i<response2.data.length; i++){
             const stockName = response2.data[i].stockName;
-            console.log("stockdataaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ", JSON.stringify(response2.data[i]));
             if(stockPricesMaptemp.has(stockName))continue;
             const stockPriceData = await Get(constants.BASE_API_URL + constants.APIS.ALL_STOCKS_DATA + `?stock_name=${stockName}`)
             stockPricesMaptemp.set(stockName, stockPriceData.data.data.price);
@@ -95,19 +94,20 @@ const Profile = function () {
         const balanceResponse = await Get(constants.BASE_API_URL + constants.APIS.CURRENT_BALANCE + `?email=${response1.data.username}`)
         values[0] = balanceResponse.data.balance;
         console.log("userrrrrrr stockkkkkkkkkkkkkkkkkkkkkkkkk ", userStockData)
+        values[1] = 0;
+        values[2] = 0;
         userStockData.forEach((item) => {
-            values[1] += Number(item.purchaseQuantity * item.stockPurchasePrice);
-            values[2] += Number(item.purchaseQuantity * stockPricesMaptemp.get(item.stockName));
+            values[1] += Number(item.quantity * item.stockPurchasePrice);
+            values[2] += Number(item.quantity * stockPricesMaptemp.get(item.stockName));
         })
         setValues(values);
     }
 
 
     useEffect(() => {
-        //if(email is already coming)
         // eslint-disable-next-line react-hooks/rules-of-hooks
         useEffectF();
-    }, [modalOpen] )
+    }, [modalOpen, tabledata] )
   return (
     <div style={{ padding: "1% 2%" }}>
       <Navbar leftText={"Personal Dashboard"} showBalance={false} iconType='Home'/>
