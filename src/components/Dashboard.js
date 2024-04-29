@@ -141,7 +141,7 @@ const Dashboard = function(){
             </div>
         }
 
-        {modalOpen && <Modal type={"buy"} setModalOpen={setModalOpen} stockData={selectedStockData} balance={balance} email={email} buyStockFunction={buyStock}/>}
+        {modalOpen && <Modal type={"Buy"} setModalOpen={setModalOpen} stockData={selectedStockData} balance={balance} email={email} buyStockFunction={buyStock}/>}
     </div>}
     </div>
 }

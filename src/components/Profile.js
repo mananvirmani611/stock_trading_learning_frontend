@@ -167,7 +167,7 @@ const Profile = function () {
                     </tbody>
                 </Table>
       </div>
-      {modalOpen && <Modal type={"sell"} setModalOpen={setModalOpen} stockData={selectedStockData} balance={values[0]} email={email} buyStockFunction={sellStock} maxAllowedQuantity={maxAllowedQuantity}/>}
+      {modalOpen && <Modal type={"Sell"} setModalOpen={setModalOpen} stockData={selectedStockData} balance={values[0]} email={email} buyStockFunction={sellStock} maxAllowedQuantity={maxAllowedQuantity}/>}
       <style>{style}</style>
     </div>
   );

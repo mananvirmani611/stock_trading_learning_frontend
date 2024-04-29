@@ -128,11 +128,11 @@ const Modal = function ({ type, setModalOpen, stockData, balance, email, buyStoc
         </div>
         <div className="modal-footer">
           <button onClick={() => {
-            type === "buy" ?
+            type === "Buy" ?
             buyStockFunction(stockData, quantity, totalPrice) : 
             buyStockFunction(email, stockData.recordId, quantity)}} 
             className='submit-btn'>
-              Buy
+              {type}
           </button>
         </div>
       </div>
